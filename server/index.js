@@ -11,7 +11,7 @@ app.use(cors());
 
 const mongodb = 'mongodb+srv://ItemShop:item1234@cluster0.zuicn.mongodb.net/TodoDB?retryWrites=true&w=majority';
 app.get('/',(req,res)=>{
-    res.send('Welcome to Server')
+    res.send('Welcome To Server..')
 })
 
 const PORT = process.env.PORT || 5000;
