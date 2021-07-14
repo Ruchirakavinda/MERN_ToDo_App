@@ -2,12 +2,14 @@ import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import todosRoutes from './routes/todo.js'; 
 
 const app = express();
 dotenv.config();
 app.use(express.json({extended : true}))
 app.use(express.urlencoded({extended : true}))
 app.use(cors());
+app.use('/todo', todosRoutes)
 
 const mongodb = 'mongodb+srv://ItemShop:item1234@cluster0.zuicn.mongodb.net/TodoDB?retryWrites=true&w=majority';
 app.get('/',(req,res)=>{
