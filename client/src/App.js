@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { readTodos } from './functions';
 import Preloader from './components/Preloader';
-import { createTodos } from './api';
+import { createTodos, updateTodos } from './api';
+
 
 function App() {
 
@@ -14,6 +15,14 @@ function App() {
 
   const [todos, setTodos] = useState(null)
 
+  const [currentId, setcurrentId] = useState(0)
+
+  useEffect(() =>{
+    let currentTodo = currentId!== 0?todos.find(todo=>todo._id===currentId):
+    {title:'',content:''}
+    setTodo(currentTodo)
+  }, [currentId])
+
   useEffect(() =>{
     const fetchdata = async()=>{
       const result = await readTodos();
@@ -23,10 +32,38 @@ function App() {
     fetchdata()
   }, [])
 
+  const clear = ()=>{
+    setcurrentId(0);
+    setTodo({
+      title:'',
+      content:''
+    });
+  }
+
+
+  useEffect(() => {
+    const clearField = (e) => {
+      if(e.keyCode === 27){
+        clear()
+      }
+    }
+    window.addEventListener('keydown', clearField)
+  return () => window.removeEventListener('keydown', clearField)
+},[])
+
+
   const  onSubmitHandler =  async (e)=>{
     e.preventDefault();
+    if(currentId===0){
+      const result = await createTodos(todo)
+      setTodos([...todos,result])
+      clear()
+    }else{
+      await updateTodos(currentId,todo)
+      clear()
+    }
     const result =  await createTodos(todo)
-    console.log(result)
+    setTodos(...todos, result)
   }
 
 
@@ -41,6 +78,7 @@ function App() {
             <div className="input-field col s6">
               <i className="material-icons prefix">title</i>
               <input id="icon_prefix" type="text" className="validate"
+              value={todo.title}
               onChange={e=>setTodo({
                 ...todo,
                 title: e.target.value
@@ -50,6 +88,7 @@ function App() {
             <div className="input-field col s6">
               <i className="material-icons prefix">description</i>
               <input id="icon_telephone" type="tel" className="validate" 
+              value={todo.content}
               onChange={e=>setTodo({
                 ...todo,
                 content: e.target.value
@@ -67,7 +106,9 @@ function App() {
           !todos? <Preloader/> : todos.length>0?
           <div className="collection">
             {todos.map(todo=>(
-              <li key={todo._id} className="collection-item">
+              <li key={todo._id} 
+              onClick={()=>setcurrentId(todo._id)}
+              className="collection-item">
                 <ul>
                   <h5>{todo.title}</h5>
                   <div className="row"><p>{todo.content}</p>
