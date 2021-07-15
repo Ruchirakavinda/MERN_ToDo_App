@@ -1,6 +1,18 @@
+import { useEffect } from 'react';
+import { readTodos } from './functions';
 import Preloader from './components/Preloader';
 
 function App() {
+
+  useEffect(() =>{
+    const fetchdata = async()=>{
+      const result = await readTodos();
+      console.log(result);
+
+    }
+    fetchdata()
+  }, [])
+
   return (
     <div className="container">
       <div className="row">
@@ -18,7 +30,7 @@ function App() {
             </div>
           </div>
         </form>
-        
+
         <Preloader/>
 
         
