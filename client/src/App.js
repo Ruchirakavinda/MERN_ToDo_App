@@ -12,10 +12,12 @@ function App() {
     }
   )
 
+  const [todos, setTodos] = useState(null)
+
   useEffect(() =>{
     const fetchdata = async()=>{
       const result = await readTodos();
-      console.log(result);
+      setTodos(result)
 
     }
     fetchdata()
@@ -61,15 +63,27 @@ function App() {
           </div>
         </form>
 
-        <Preloader/>
+        {
+          !todos? <Preloader/> : todos.length>0?
+          <div className="collection">
+            {todos.map(todo=>(
+              <li key={todo._id} className="collection-item">
+                <ul>
+                  <h5>{todo.title}</h5>
+                  <div className="row"><p>{todo.content}</p>
+                  <a href="#!" className="secondary-content">
+                  <i className="material-icons">delete</i>
+                  </a></div>
+                </ul>
+              </li>
+            ))}
+          </div> : <div><h6>Nothing to Do...</h6></div>
+
+        }
 
         
-      <div class="collection">
-        <a href="#!" class="collection-item">Alvin</a>
-        <a href="#!" class="collection-item active">Alvin</a>
-        <a href="#!" class="collection-item">Alvin</a>
-        <a href="#!" class="collection-item">Alvin</a>
-      </div>
+      
+
             
       </div>
     </div>
