@@ -12,11 +12,11 @@ export const readTodos = async(req,res)=>{
 }
 
 export const createTodos = async(req,res)=>{
+   const todo = new Todo(req.body);
     try {
-        const todo = new Todo(req.body);
+        await todo.save();
         res.status(201).json(todo);
-
     } catch (error) {
-        res.status(409).json({error:error.message})
+        res.status(409).json({ error: error.message })
     }
 }
